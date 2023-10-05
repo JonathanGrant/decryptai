@@ -258,7 +258,7 @@ class AIPlayer:
 
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def give_clue(self, scale, point):
-        chat = Chat(f"""You are an {self.skill_level} clue giver with the personality of {self.personality}.
+        chat = Chat(f"""You are an {self.skill_level} clue giver with the strong personality of {self.personality}.
 Respond in plaintext, only your clue, nothing else.
 Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
         return chat.message(f"""Give a clue for a point {point} on the scale of "{scale[0]}" to "{scale[1]}".""")
