@@ -85,19 +85,6 @@ const App = () => {
   }
 
   useEffect(() => {
-    // ONLOAD Call
-    // Fetch the player name from the server when the component mounts
-    axios.get(`${URL}/player_name`)
-      .then(response => {
-        // Set the player name in the state
-        setPlayerName(response.data.player_name);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the player name:', error);
-      });
-  }, []);
-
-  useEffect(() => {
     const fetchRoomInfo = async () => {
       try {
         const response = await axios.get(`${URL}/get_room/${roomCode}`);
