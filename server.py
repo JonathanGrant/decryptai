@@ -62,8 +62,8 @@ def join_room(room_code, player_name):
     """
     if room_code not in rooms:
         ai_player = AI_PREFIX + random.choice(adjectives) + ' ' + random.choice(ais)
-        rooms[room_code] = {'players': {ai_player: {'score': 0}}, 'game_state': 'Waiting', 'score': 0}
-    rooms[room_code]['players'][player_name] = {'score': 0}
+        rooms[room_code] = {'players': {ai_player: {'score': 0, 'last_score': 0}}, 'game_state': 'Waiting', 'score': 0}
+    rooms[room_code]['players'][player_name] = {'score': 0, 'last_score': 0}
     return jsonify({'status': 'joined', 'room_code': room_code}), 200
 
 @app.route('/api/get_room/<room_code>', methods=['GET'])
@@ -217,8 +217,10 @@ def check_for_next_round(room_code):
             player_points = 100 * (1 - abs(real_point - float(guess)))
             overall_points += player_points
             rooms[room_code]['players'][player]['score'] += player_points
+            rooms[room_code]['players'][player]['last_score'] = player_points
         rooms[room_code]['score'] += overall_points / (n_players - 1)
         rooms[room_code]['players'][clue_player_name]['score'] += overall_points / (n_players - 1)
+        rooms[room_code]['players'][clue_player_name]['last_score'] = overall_points / (n_players - 1)
 
         # Next round
         clue_player_idx += 1

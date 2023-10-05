@@ -137,11 +137,11 @@ const App = () => {
         <div>
           <Typography variant="h6">Room Data:</Typography>
           <Typography variant="body1">Game State: {roomData.game_state}</Typography>
-          <Typography variant="body1">Score: {roomData.score}</Typography>
+          <Typography variant="body1">Score: {roomData.score.toFixed(2)}</Typography>
           <Typography variant="body1">Players:</Typography>
           {Object.keys(roomData.players).map((player) => (
             <Typography key={player} variant="body2">
-              {player}: {roomData.players[player].score}
+              {player}: {roomData.players[player].score.toFixed(2)} (+{roomData.players[player].last_score.toFixed(2)})
             </Typography>
           ))}
         </div>
