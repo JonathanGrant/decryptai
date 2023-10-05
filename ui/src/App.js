@@ -68,7 +68,7 @@ const App = () => {
 
   const updateGuess = async (guess) => {
     try {
-      const response = await axios.post(`${URL}/room/${roomCode}/guess`, {guess: guess, player_name: playerName});
+      const response = await axios.post(`${URL}/room/${roomCode}/guess`, {guess: guess, player: playerName});
       setRoomData(response.data);
     } catch (error) {
       console.error('Could not updateGuess:', error);
