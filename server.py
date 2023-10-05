@@ -5,14 +5,17 @@ from flask_cors import CORS
 from flasgger import Swagger
 import random
 import string
-from datetime import timedelta
+import retrying
+import threading
+import functools
+
+from ChatPodcastGPT import Chat
 
 
 prefix = '/home/jongathan/waivelength/'
 if not os.path.exists(prefix):
     prefix = '/Users/jong/Documents/waivelength/'
-print(prefix)
-
+AI_PREFIX = "[AI] "
 
 app = Flask(__name__, static_folder=prefix+'ui/build')
 CORS(app, supports_credentials=True)
@@ -22,6 +25,7 @@ swagger = Swagger(app)
 
 nouns      = open(prefix+'nouns.txt'     ).read().split('\n')
 adjectives = open(prefix+'adjectives.txt').read().split('\n')
+ais        = open(prefix+'ais.txt'       ).read().split('\n')
 scales = [l.replace('\n', '').split(';', maxsplit=1) for l in open(prefix+'scales.txt')]
 
 rooms = {}  # Store room data here
@@ -57,7 +61,8 @@ def join_room(room_code, player_name):
             description: Room not found
     """
     if room_code not in rooms:
-        rooms[room_code] = {'players': {}, 'game_state': 'Waiting', 'score': 0}
+        ai_player = AI_PREFIX + random.choice(adjectives) + ' ' + random.choice(ais)
+        rooms[room_code] = {'players': {ai_player: {'score': 0}}, 'game_state': 'Waiting', 'score': 0}
     rooms[room_code]['players'][player_name] = {'score': 0}
     return jsonify({'status': 'joined', 'room_code': room_code}), 200
 
@@ -77,7 +82,6 @@ def get_room(room_code):
             description: Room not found
     """
     room_data = rooms.get(room_code)
-    print(room_data)
     if room_data:
         return jsonify(room_data), 200
     else:
@@ -134,6 +138,37 @@ def change_room_state(room_code):
     return jsonify(rooms[room_code]), 200
 
 
+def begin_guessing(room_code):
+    rooms[room_code]['game_state'] = 'Guessing'
+    sorted_players = sorted(rooms[room_code]['players'].keys())
+    rooms[room_code]['game_idx'] = [0, 0, sorted_players[0]]
+    rooms[room_code]['guesses'] = {
+        p: 0.5
+        for p in sorted_players
+        if p != rooms[room_code]['game_idx'][2]
+    }
+    rooms[room_code]['guess_count'] = 0
+    threading.Thread(target=functools.partial(ai_guess, room_code)).start()
+
+
+def ai_guess(room_code):
+    ai_player = [p for p in rooms[room_code]['players'] if p.startswith(AI_PREFIX)][0]
+    round_idx, player_idx, player = rooms[room_code]['game_idx']
+    if ai_player == player: return
+    ai = AIPlayer(personality=ai_player.split(AI_PREFIX)[1])
+    data = rooms[room_code]['rounds'][round_idx]['players'][player]
+    rooms[room_code]['guesses'][ai_player] = ai.guess(data['scale'], data['clue'])
+    rooms[room_code]['guess_count'] += 1
+    check_for_next_round(room_code)
+
+def ai_clue(room_code, round, player):
+    data = rooms[room_code]['rounds'][-1]['players'][player]
+    ai = AIPlayer(personality=player.split(AI_PREFIX)[1])
+    rooms[room_code]['rounds'][round]['players'][player]['clue'] = ai.give_clue(data['scale'], data['point'])
+    if all(round_data['players'][player].get('clue') is not None for round_data in rooms[room_code]['rounds']):
+        if all(p.get('clue') is not None for p in rooms[room_code]['rounds'][0]['players'].values()):
+            begin_guessing(room_code)
+
 def setup_game(room_code):
     n_players = len(rooms[room_code]['players'])
     if n_players <= 1:
@@ -144,30 +179,23 @@ def setup_game(room_code):
     if n_players >= 6:
         n_rounds -= 1
 
-    rounds_data = []
+    rooms[room_code]['rounds'] = []
     for round in range(n_rounds):
-        rounds_data.append({'players': {}})
+        rooms[room_code]['rounds'].append({'players': {}})
         for player in rooms[room_code]['players'].keys():
-            rounds_data[-1]['players'][player] = {
+            rooms[room_code]['rounds'][-1]['players'][player] = {
                 'scale': random.choice(scales),
                 'point': random.uniform(0.0, 1.0),
             }
-    rooms[room_code]['rounds'] = rounds_data
+            if player.startswith(AI_PREFIX):
+                threading.Thread(target=functools.partial(ai_clue, room_code, round, player)).start()
 
 @app.route('/api/room/<room_code>/clues', methods=['POST'])
 def submit_clues(room_code):
     for i, clue in enumerate(request.json['clues']):
         rooms[room_code]['rounds'][i]['players'][request.json['player']]['clue'] = clue
     if all(p.get('clue') is not None for p in rooms[room_code]['rounds'][0]['players'].values()):
-        rooms[room_code]['game_state'] = 'Guessing'
-        sorted_players = sorted(rooms[room_code]['players'].keys())
-        rooms[room_code]['game_idx'] = [0, 0, sorted_players[0]]
-        rooms[room_code]['guesses'] = {
-            p: 0.5
-            for p in sorted_players
-            if p != rooms[room_code]['game_idx'][2]
-        }
-        rooms[room_code]['guess_count'] = 0
+        begin_guessing(room_code)
     return jsonify(rooms[room_code]), 200
 
 @app.route('/api/room/<room_code>/guess', methods=['POST'])
@@ -177,10 +205,9 @@ def update_guess(room_code):
         rooms[room_code]['guesses'][player_name] = request.json['guess']
     return jsonify(rooms[room_code]), 200
 
-@app.route('/api/room/<room_code>/submit_guess', methods=['POST'])
-def submit_guess(room_code):
+
+def check_for_next_round(room_code):
     round_idx, clue_player_idx, clue_player_name = rooms[room_code]['game_idx']
-    rooms[room_code]['guess_count'] += 1
     n_players = len(rooms[room_code]['players'])
     if rooms[room_code]['guess_count'] >= n_players - 1:
         # Add score
@@ -212,8 +239,33 @@ def submit_guess(room_code):
                 if p != rooms[room_code]['game_idx'][2]
             }
             rooms[room_code]['guess_count'] = 0
-        print('AAAAAAA', round_idx, clue_player_idx, rooms[room_code])
+            threading.Thread(target=functools.partial(ai_guess, room_code)).start()
+
+@app.route('/api/room/<room_code>/submit_guess', methods=['POST'])
+def submit_guess(room_code):
+    round_idx, clue_player_idx, clue_player_name = rooms[room_code]['game_idx']
+    rooms[room_code]['guess_count'] += 1
+    check_for_next_round(room_code)
     return jsonify(rooms[room_code]), 200
+
+
+class AIPlayer:
+    def __init__(self, skill_level = 'expert', personality = 'Elon Musk'):
+        self.skill_level = skill_level
+        self.personality = personality
+
+    @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
+    def give_clue(self, scale, point):
+        chat = Chat(f"""You are an {self.skill_level} clue giver with the personality of {self.personality}.
+Respond in plaintext, only your clue, nothing else.
+Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
+        return chat.message(f"""Give a clue for a point {point} on the scale of "{scale[0]}" to "{scale[1]}".""")
+
+    @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
+    def guess(self, scale, clue):
+        chat = Chat(f"""You are an {self.skill_level} clue guesser. Respond in plaintext, only a float from 0.0-1.0, nothing else.""")
+        return float(chat.message(f"""Given this clue "{clue}" on this scale "{scale[0]}" to "{scale[1]}", what is your best guess for the point along the scale?"""))
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)

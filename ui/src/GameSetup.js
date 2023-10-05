@@ -27,7 +27,7 @@ const GameSetup = ({ playerName, rounds, submit }) => {
           <div key={index}>
             <h2>Round {index + 1}</h2>
             <DraggableSemiCircle value={point} locked />
-            <p>Scale: {scale.join(' - ')}</p>
+            <p>Scale: {scale.join(' <---> ')}</p>
             <input
               type="text"
               placeholder="Enter your clue"

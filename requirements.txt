@@ -2,3 +2,12 @@ Flask
 Flask-SocketIO
 Flask-CORS
 flasgger
+openai
+tiktoken
+IPython
+structlog
+gtts
+requests
+PyGithub
+retrying
+beautifulsoup4
