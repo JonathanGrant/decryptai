@@ -30,7 +30,7 @@ const GameGuess = ({ myName, game_idx, guesses, rounds, updateGuess, submitGuess
   return (
     <div>
       <h2>Round {round_number + 1}</h2>
-      <p>{currentRound.scale}</p>
+      <p>{currentRound.scale.join(' - ')}</p>
       <p>Clue: {currentRound.clue}</p>
 
       <div>

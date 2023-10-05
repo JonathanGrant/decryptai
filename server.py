@@ -8,7 +8,12 @@ import string
 from datetime import timedelta
 
 
-app = Flask(__name__, static_folder='ui/build')
+prefix = '/home/jongathan/waivelength/'
+if not os.path.exists(prefix):
+    prefix = '/Users/jong/Documents/waivelength/'
+
+
+app = Flask(__name__, static_folder=prefix+'ui/build')
 CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'mysecret'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
@@ -17,9 +22,9 @@ app.config['SESSION_COOKIE_SECURE'] = True
 socketio = SocketIO(app, cors_allowed_origins="*")
 swagger = Swagger(app)
 
-nouns      = open('nouns.txt'     ).read().split('\n')
-adjectives = open('adjectives.txt').read().split('\n')
-scales = [l.replace('\n', '').split(';', maxsplit=1) for l in open('scales.txt')]
+nouns      = open(prefix+'nouns.txt'     ).read().split('\n')
+adjectives = open(prefix+'adjectives.txt').read().split('\n')
+scales = [l.replace('\n', '').split(';', maxsplit=1) for l in open(prefix+'scales.txt')]
 
 rooms = {}  # Store room data here
 
@@ -28,9 +33,9 @@ rooms = {}  # Store room data here
 @app.route('/<path:path>')
 def serve(path):
     if path != "" and os.path.exists("ui/build/" + path):
-        return send_from_directory('ui/build', path)
+        return send_from_directory(prefix+'ui/build', path)
     else:
-        return send_from_directory('ui/build', 'index.html')
+        return send_from_directory(prefix+'ui/build', 'index.html')
 
 def generate_room_code():
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))

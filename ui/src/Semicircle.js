@@ -14,12 +14,16 @@ const SemiCircleSlider = ({ value, onChange, locked }) => {
     }
   };
 
+  const trackColors = locked ? ["#ccc", "#ccc", "#ccc"] : ["#ccc", "#548BF4", "#ccc"];
+  const thumbColor = locked ? "#ccc" : "#548BF4";
+
   return (
     <div
       style={{
         display: "flex",
         justifyContent: "center",
-        flexWrap: "wrap"
+        flexWrap: "wrap",
+        width: "100%"
       }}
     >
       <Range
@@ -47,7 +51,7 @@ const SemiCircleSlider = ({ value, onChange, locked }) => {
                 borderRadius: "4px",
                 background: getTrackBackground({
                   values,
-                  colors: ["#ccc", "#548BF4", "#ccc"],
+                  colors: trackColors,
                   min: MIN,
                   max: MAX
                 }),
@@ -78,7 +82,7 @@ const SemiCircleSlider = ({ value, onChange, locked }) => {
                 height: "8px",
                 width: "8px",
                 borderRadius: "50%",
-                backgroundColor: "#548BF4"
+                backgroundColor: thumbColor
               }}
             />
           </div>
