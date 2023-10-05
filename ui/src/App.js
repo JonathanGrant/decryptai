@@ -16,6 +16,7 @@ const URL = "/api"
 
 const App = () => {
   const [playerName, setPlayerName] = useState('');
+  const [playerNameHasSet, setPlayerNameHasSet] = useState(false);
   const [roomCode, setRoomCode] = useState('');
   const [roomData, setRoomData] = useState(null);
   const [setupGame, setSetupGame] = useState(false);
@@ -50,6 +51,7 @@ const App = () => {
 
   const setPlayer = async () => {
     try {
+      setPlayerNameHasSet(true)
       await axios.post(`${URL}/player_name`, { player_name: playerName });
     } catch (error) {
       console.error('Could not set player name:', error);
@@ -109,14 +111,14 @@ const App = () => {
     <Container>
       <Typography variant="h4">wAIvelength Game</Typography>
 
-      <TextField
+      {!playerNameHasSet ? (<><TextField
         label="Player Name"
         value={playerName}
-        onChange={(e) => setPlayerName(e.target.value)}
+        onChange={(e) => {setPlayerName(e.target.value);}}
       />
       <Button variant="contained" color="primary" onClick={setPlayer}>
         Set Player Name
-      </Button>
+      </Button></>) : null}
 
       <TextField
         label="Room Code"
