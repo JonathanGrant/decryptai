@@ -12,7 +12,7 @@ import functools
 from ChatPodcastGPT import Chat
 
 
-prefix = '/home/jongathan/waivelength/'
+prefix = '/root/waivelength/'
 if not os.path.exists(prefix):
     prefix = '/Users/jong/Documents/waivelength/'
 AI_PREFIX = "[AI] "
@@ -270,4 +270,4 @@ Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, host="0.0.0.0")
