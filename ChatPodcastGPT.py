@@ -35,7 +35,7 @@ from xml.etree import ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
 logger = structlog.getLogger()
-openai.api_key = os.environ.get("OPENAI_KEY", None) or open('/Users/jong/.openai_key').read().strip()
+openai.api_key = os.environ.get("OPENAI_KEY", None) or open('/home/jongathan/waivelength/.openai_key').read().strip()
 
 
 # %%
