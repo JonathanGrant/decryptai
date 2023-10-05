@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, jsonify, session, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flasgger import Swagger
@@ -17,9 +17,6 @@ print(prefix)
 app = Flask(__name__, static_folder=prefix+'ui/build')
 CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'mysecret'
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
-app.config['SESSION_COOKIE_SAMESITE'] = "None"
-app.config['SESSION_COOKIE_SECURE'] = True
 socketio = SocketIO(app, cors_allowed_origins="*")
 swagger = Swagger(app)
 
@@ -99,7 +96,6 @@ def set_player_name():
             description: Name set successfully
     """
     player_name = request.form.get('player_name')
-    session['player_name'] = player_name
     return jsonify({'status': 'Name set'}), 200
 
 @app.route('/api/player_name', methods=['GET'])
@@ -115,9 +111,7 @@ def get_player_name():
         200:
             description: Name set successfully
     """
-    if 'player_name' not in session:
-        session['player_name'] = random.choice(adjectives) + ' ' + random.choice(nouns)
-    return jsonify({"player_name": session['player_name']}), 200
+    return jsonify({"player_name": random.choice(adjectives) + ' ' + random.choice(nouns)}), 200
 
 
 @app.route('/api/room/<room_code>', methods=['POST'])
