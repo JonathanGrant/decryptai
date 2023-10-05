@@ -177,7 +177,7 @@ def submit_clues(room_code):
 
 @app.route('/api/room/<room_code>/guess', methods=['POST'])
 def update_guess(room_code):
-    player_name = session['player_name']
+    player_name = request.form.get('player_name')
     if player_name != rooms[room_code]['game_idx'][2]:
         rooms[room_code]['guesses'][player_name] = request.json['guess']
     return jsonify(rooms[room_code]), 200
