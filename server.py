@@ -177,8 +177,6 @@ def submit_clues(room_code):
 
 @app.route('/api/room/<room_code>/guess', methods=['POST'])
 def update_guess(room_code):
-    if 'player_name' not in session:
-        session['player_name'] = random.choice(adjectives) + ' ' + random.choice(nouns)
     player_name = session['player_name']
     if player_name != rooms[room_code]['game_idx'][2]:
         rooms[room_code]['guesses'][player_name] = request.json['guess']
