@@ -1,0 +1,30 @@
+Easy to Debug;Hard to Debug
+Front-end Issue;Back-end Issue
+Requires Hotfix;Can Wait for Next Release
+Intermittent Bug;Consistent Bug
+Documentation Helpful;Documentation Useless
+User Error;System Error
+Low Priority;High Priority
+Cosmetic Issue;Functional Issue
+Likely to be Noticed by Users;Unlikely to be Noticed by Users
+Can Be Solved with a Plugin;Requires Custom Code
+Quick Fix;Time-consuming Fix
+Obvious Error Message;Cryptic Error Message
+Requires Rollback;Fixable Forward
+Local Issue;Production Issue
+Single Browser Problem;Cross-Browser Problem
+One-line Fix;Requires Major Refactoring
+Likely Developer Mistake;Likely a Third-Party Issue
+UI/UX Related;API Related
+Can be Debugged Locally;Requires Remote Debugging
+Impacts Many Users;Impacts Few Users
+Can Be Solved by Front-end Team;Requires Back-end Team
+Results in App Crash;Silent Failure
+Reproducible;Non-reproducible
+Requires Root Access;No Special Access Needed
+Common Issue;Rare Issue
+Impacts Core Functionality;Marginal Impact
+Data Corruption Involved;No Data Issues
+Requires Monitoring;One-time Fix
+Needs Multiple Teams to Resolve;Can Be Fixed by One Person
+Impacts Mobile Users More;Impacts Desktop Users More
