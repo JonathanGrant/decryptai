@@ -77,6 +77,7 @@ def get_room(room_code):
             description: Room not found
     """
     room_data = rooms.get(room_code)
+    print(room_data)
     if room_data:
         return jsonify(room_data), 200
     else:
