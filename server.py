@@ -11,6 +11,7 @@ from datetime import timedelta
 prefix = '/home/jongathan/waivelength/'
 if not os.path.exists(prefix):
     prefix = '/Users/jong/Documents/waivelength/'
+print(prefix)
 
 
 app = Flask(__name__, static_folder=prefix+'ui/build')
@@ -32,7 +33,7 @@ rooms = {}  # Store room data here
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    if path != "" and os.path.exists("ui/build/" + path):
+    if path != "" and os.path.exists(prefix+"ui/build/" + path):
         return send_from_directory(prefix+'ui/build', path)
     else:
         return send_from_directory(prefix+'ui/build', 'index.html')
