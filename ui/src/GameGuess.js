@@ -54,7 +54,7 @@ const GameGuess = ({ myName, game_idx, guesses, guessReasons, rounds, updateGues
         <h3>All Guesses</h3>
         {Object.entries(guesses).map(([name, guess], index) => (
           <p key={index}>
-            {name}: {guess.toFixed(2)} {guessReasons[name] ? `(${guessReasons[name]})` : null}
+            {name}: {guess.toFixed(2)} {(guessReasons && guessReasons[name]) ? `(${guessReasons[name]})` : null}
           </p>
         ))}
       </div>
