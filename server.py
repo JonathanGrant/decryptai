@@ -276,8 +276,9 @@ Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
         chat = Chat(f"""You are an {self.skill_level} clue guesser with the strong personality of {self.personality}.
 Respond in JSON with your reasoning (string) and guess (a float from 0.0-1.0), nothing else.
 Example: {{"reason": "...", "guess": 0.53}}.
-Only respond in JSON and nothing else.""")
-        data = chat.message(f"""Given this clue "{clue}" on this scale "{scale[0]}" to "{scale[1]}", what is your best guess for the point along the scale?""")
+Only respond in JSON and nothing else.
+Your reasoning must be overwhelmingly in the voice of {self.personality}""")
+        data = chat.message(f"""Given this clue "{clue}" on this scale "{scale[0]}" (0) to "{scale[1]}" (1), what is your best guess for the point along the scale?""")
         try:
             data = json.loads(data)
         except:
