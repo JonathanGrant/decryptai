@@ -3,11 +3,15 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_socketio import SocketIO
 from flask_cors import CORS
 from flasgger import Swagger
+import json
 import random
 import string
 import retrying
 import threading
 import functools
+import structlog
+
+logger = structlog.getLogger()
 
 from ChatPodcastGPT import Chat
 
@@ -148,6 +152,7 @@ def begin_guessing(room_code):
         if p != rooms[room_code]['game_idx'][2]
     }
     rooms[room_code]['guess_count'] = 0
+    rooms[room_code]['guess_reason'] = {}
     threading.Thread(target=functools.partial(ai_guess, room_code)).start()
 
 
@@ -157,7 +162,9 @@ def ai_guess(room_code):
     if ai_player == player: return
     ai = AIPlayer(personality=ai_player.split(AI_PREFIX)[1])
     data = rooms[room_code]['rounds'][round_idx]['players'][player]
-    rooms[room_code]['guesses'][ai_player] = ai.guess(data['scale'], data['clue'])
+    ai_guess_data = ai.guess(data['scale'], data['clue'])
+    rooms[room_code]['guesses'][ai_player] = ai_guess_data['guess']
+    rooms[room_code]['guess_reason'][ai_player] = ai_guess_data['reason']
     rooms[room_code]['guess_count'] += 1
     check_for_next_round(room_code)
 
@@ -230,7 +237,7 @@ def check_for_next_round(room_code):
         if round_idx >= len(rooms[room_code]['rounds']):
             # Game over
             rooms[room_code]['game_state'] = 'Waiting'
-            for k in ['guesses', 'game_idx', 'guess_count', 'rounds']:
+            for k in ['guesses', 'game_idx', 'guess_count', 'guess_reason', 'rounds']:
                 rooms[room_code].pop(k)
         else:
             sorted_players = sorted(rooms[room_code]['players'].keys())
@@ -241,6 +248,7 @@ def check_for_next_round(room_code):
                 if p != rooms[room_code]['game_idx'][2]
             }
             rooms[room_code]['guess_count'] = 0
+            rooms[room_code]['guess_reason'] = {}
             threading.Thread(target=functools.partial(ai_guess, room_code)).start()
 
 @app.route('/api/room/<room_code>/submit_guess', methods=['POST'])
@@ -265,8 +273,21 @@ Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
 
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def guess(self, scale, clue):
-        chat = Chat(f"""You are an {self.skill_level} clue guesser. Respond in plaintext, only a float from 0.0-1.0, nothing else.""")
-        return float(chat.message(f"""Given this clue "{clue}" on this scale "{scale[0]}" to "{scale[1]}", what is your best guess for the point along the scale?"""))
+        chat = Chat(f"""You are an {self.skill_level} clue guesser with the strong personality of {self.personality}.
+Respond in JSON with your reasoning (string) and guess (a float from 0.0-1.0), nothing else.
+Example: {{"reason": "...", "guess": 0.53}}.
+Only respond in JSON and nothing else.""")
+        data = chat.message(f"""Given this clue "{clue}" on this scale "{scale[0]}" to "{scale[1]}", what is your best guess for the point along the scale?""")
+        try:
+            data = json.loads(data)
+        except:
+            logger.error("Cannot parse JSON data from Chat: " + data)
+            raise
+        if 'reason' not in data or 'guess' not in data:
+            logger.error("Missing reason or guess in JSON data from Chat: " + data)
+            raise Exception("Missing reason or guess in JSON data from Chat: " + data)
+        data['guess'] = float(data['guess'])
+        return data
 
 
 if __name__ == '__main__':

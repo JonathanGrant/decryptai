@@ -149,7 +149,7 @@ const App = () => {
 
       {roomData && roomData.game_state === 'Setup' && !setupGame ? (<GameSetup playerName={playerName} rounds={roomData.rounds} submit={submitClues}/>) : null}
 
-      {roomData && roomData.game_state === 'Guessing' ? (<GameGuess myName={playerName} game_idx={roomData.game_idx} guesses={roomData.guesses} rounds={roomData.rounds} updateGuess={updateGuess} submitGuess={submitGuess} />) : null}
+      {roomData && roomData.game_state === 'Guessing' ? (<GameGuess myName={playerName} game_idx={roomData.game_idx} guesses={roomData.guesses} guessReasons={roomData.guess_reasons} rounds={roomData.rounds} updateGuess={updateGuess} submitGuess={submitGuess} />) : null}
     </Container>
     </div>
   );

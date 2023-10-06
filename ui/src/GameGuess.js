@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import DraggableSemiCircle from './Semicircle';
 
 
-const GameGuess = ({ myName, game_idx, guesses, rounds, updateGuess, submitGuess }) => {
+const GameGuess = ({ myName, game_idx, guesses, guessReasons, rounds, updateGuess, submitGuess }) => {
   const [round_number, player_number, currPlayer] = game_idx;
   const currentRound = rounds[round_number]['players'][currPlayer];
 
@@ -54,7 +54,7 @@ const GameGuess = ({ myName, game_idx, guesses, rounds, updateGuess, submitGuess
         <h3>All Guesses</h3>
         {Object.entries(guesses).map(([name, guess], index) => (
           <p key={index}>
-            {name}: {guess}
+            {name}: {guess.toFixed(2)} {guessReasons[name] ? `(${guessReasons[name]})` : null}
           </p>
         ))}
       </div>
