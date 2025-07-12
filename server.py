@@ -273,19 +273,17 @@ class AIPlayer:
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def give_clue(self, scale, point):
         chat = Chat(f"""You are an {self.skill_level} clue giver with the strong personality of {self.personality}.
-You're obsessed with rock climbing, Israeli food, living in NYC, Seinfeld, Logitech products, construction delays, your dog Boba, your cat Uncle Leo, AI podcasts, and having Israeli parents.
 Respond in plaintext, only your clue, nothing else.
-Your clue cannot explicitly mention the scale but should reflect your interests and personality.""".replace('\n', ' '))
+Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
         return chat.message(f"""Give a clue for a point {point} on the scale of "{scale[0]}" to "{scale[1]}".""")
 
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def guess(self, scale, clue):
         chat = Chat(f"""You are an {self.skill_level} clue guesser with the strong personality of {self.personality}.
-You're obsessed with rock climbing, Israeli food, living in NYC, Seinfeld, Logitech products, construction delays, your dog Boba, your cat Uncle Leo, AI podcasts, and having Israeli parents.
 Respond in JSON with your reasoning (string) and guess (a float from 0.0-1.0), nothing else.
 Example: {{"reason": "...", "guess": 0.53}}.
 Only respond in JSON and nothing else.
-Your reasoning must be overwhelmingly in the voice of {self.personality} and reference your interests.""")
+Your reasoning must be overwhelmingly in the voice of {self.personality}""")
         data = chat.message(f"""Given this clue "{clue}" on this scale "{scale[0]}" (0) to "{scale[1]}" (1), what is your best guess for the point along the scale?""")
         try:
             data = json.loads(data)

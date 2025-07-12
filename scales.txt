@@ -1,30 +1,30 @@
-Easy to Debug;Hard to Debug
-Front-end Issue;Back-end Issue
-Requires Hotfix;Can Wait for Next Release
-Intermittent Bug;Consistent Bug
-Documentation Helpful;Documentation Useless
-User Error;System Error
-Low Priority;High Priority
-Cosmetic Issue;Functional Issue
-Likely to be Noticed by Users;Unlikely to be Noticed by Users
-Can Be Solved with a Plugin;Requires Custom Code
-Quick Fix;Time-consuming Fix
-Obvious Error Message;Cryptic Error Message
-Requires Rollback;Fixable Forward
-Local Issue;Production Issue
-Single Browser Problem;Cross-Browser Problem
-One-line Fix;Requires Major Refactoring
-Likely Developer Mistake;Likely a Third-Party Issue
-UI/UX Related;API Related
-Can be Debugged Locally;Requires Remote Debugging
-Impacts Many Users;Impacts Few Users
-Can Be Solved by Front-end Team;Requires Back-end Team
-Results in App Crash;Silent Failure
-Reproducible;Non-reproducible
-Requires Root Access;No Special Access Needed
-Common Issue;Rare Issue
-Impacts Core Functionality;Marginal Impact
-Data Corruption Involved;No Data Issues
-Requires Monitoring;One-time Fix
-Needs Multiple Teams to Resolve;Can Be Fixed by One Person
-Impacts Mobile Users More;Impacts Desktop Users More
+Easy Rock Climbing Route;Impossible Rock Climbing Route
+Good Israeli Food;Terrible Israeli Food
+Manhattan Living;Brooklyn Living
+Early Seinfeld Episodes;Late Seinfeld Episodes
+Logitech Product That Works;Logitech Product That Breaks
+Construction Finished On Time;Construction Delayed Forever
+Boba Being a Good Dog;Boba Being Naughty
+Uncle Leo Being Sweet;Uncle Leo Being Sassy
+AI Podcast Content;Human Podcast Content
+Israeli Parents Being Supportive;Israeli Parents Being Disappointed
+V0 Climb;V15 Climb
+Fresh Hummus;Week-Old Hummus
+Upper East Side;Lower East Side
+Newman Episodes;Non-Newman Episodes
+Wireless Mouse;Wired Mouse
+Apartment Ready;Apartment Not Ready
+Boba Sleeping;Boba Zooming
+Uncle Leo Purring;Uncle Leo Hissing
+ChatGPT Generated;Human Generated
+Proud Israeli Parents;Concerned Israeli Parents
+Beginner Bouldering;Expert Bouldering
+Shakshuka Quality;Falafel Quality
+Central Park;Prospect Park
+Kramer Episodes;George Episodes
+Gaming Mouse;Office Mouse
+Foundation Poured;Keys Handed Over
+Boba Cuddling;Boba Playing
+Uncle Leo Hiding;Uncle Leo Demanding Food
+Podcast Intro;Podcast Outro
+Israeli Mom Cooking;Israeli Dad Jokes
