@@ -149,6 +149,7 @@ def change_room_state(room_code):
 
 
 def begin_guessing(room_code):
+    logger.info(f"Starting guessing phase for room {room_code}")
     rooms[room_code]['game_state'] = 'Guessing'
     sorted_players = sorted(rooms[room_code]['players'].keys())
     rooms[room_code]['game_idx'] = [0, 0, sorted_players[0]]
@@ -159,28 +160,69 @@ def begin_guessing(room_code):
     }
     rooms[room_code]['guess_count'] = 0
     rooms[room_code]['guess_reason'] = {}
+    logger.info(f"Current player giving clues: {sorted_players[0]}")
+    logger.info(f"Players who need to guess: {[p for p in sorted_players if p != sorted_players[0]]}")
     threading.Thread(target=functools.partial(ai_guess, room_code)).start()
 
 
 def ai_guess(room_code):
-    ai_player = [p for p in rooms[room_code]['players'] if p.startswith(AI_PREFIX)][0]
-    round_idx, player_idx, player = rooms[room_code]['game_idx']
-    if ai_player == player: return
-    ai = AIPlayer(personality=ai_player.split(AI_PREFIX)[1])
-    data = rooms[room_code]['rounds'][round_idx]['players'][player]
-    ai_guess_data = ai.guess(data['scale'], data['clue'])
-    rooms[room_code]['guesses'][ai_player] = ai_guess_data['guess']
-    rooms[room_code]['guess_reason'][ai_player] = ai_guess_data['reason']
-    rooms[room_code]['guess_count'] += 1
-    check_for_next_round(room_code)
+    try:
+        logger.info(f"AI guess starting for room {room_code}")
+        ai_players = [p for p in rooms[room_code]['players'] if p.startswith(AI_PREFIX)]
+        logger.info(f"Found AI players: {ai_players}")
+        
+        round_idx, player_idx, current_player = rooms[room_code]['game_idx']
+        logger.info(f"Current round: {round_idx}, current player: {current_player}")
+        
+        # Find AI players that need to guess (not the current clue giver)
+        ai_players_to_guess = [p for p in ai_players if p != current_player]
+        logger.info(f"AI players that need to guess: {ai_players_to_guess}")
+        
+        for ai_player in ai_players_to_guess:
+            # Skip if this AI already made a guess
+            if ai_player in rooms[room_code]['guesses'] and rooms[room_code]['guesses'][ai_player] != 0.5:
+                logger.info(f"AI {ai_player} already made a guess: {rooms[room_code]['guesses'][ai_player]}")
+                continue
+                
+            logger.info(f"AI player {ai_player} making guess...")
+            ai = AIPlayer(personality=ai_player.split(AI_PREFIX)[1])
+            data = rooms[room_code]['rounds'][round_idx]['players'][current_player]
+            logger.info(f"Scale: {data['scale']}, Clue: {data['clue']}")
+            
+            ai_guess_data = ai.guess(data['scale'], data['clue'])
+            rooms[room_code]['guesses'][ai_player] = ai_guess_data['guess']
+            rooms[room_code]['guess_reason'][ai_player] = ai_guess_data['reason']
+            rooms[room_code]['guess_count'] += 1
+            logger.info(f"AI {ai_player} guessed {ai_guess_data['guess']} with reason: {ai_guess_data['reason']}")
+        
+        logger.info(f"Total guesses so far: {rooms[room_code]['guess_count']}")
+        check_for_next_round(room_code)
+    except Exception as e:
+        logger.error(f"Error in ai_guess for room {room_code}: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
 
 def ai_clue(room_code, round, player):
-    data = rooms[room_code]['rounds'][-1]['players'][player]
-    ai = AIPlayer(personality=player.split(AI_PREFIX)[1])
-    rooms[room_code]['rounds'][round]['players'][player]['clue'] = ai.give_clue(data['scale'], data['point'])
-    if all(round_data['players'][player].get('clue') is not None for round_data in rooms[room_code]['rounds']):
-        if all(p.get('clue') is not None for p in rooms[room_code]['rounds'][0]['players'].values()):
+    try:
+        logger.info(f"AI {player} generating clue for room {room_code}, round {round}")
+        data = rooms[room_code]['rounds'][-1]['players'][player]
+        logger.info(f"AI {player} has scale: {data['scale']}, point: {data['point']}")
+        ai = AIPlayer(personality=player.split(AI_PREFIX)[1])
+        clue = ai.give_clue(data['scale'], data['point'])
+        rooms[room_code]['rounds'][round]['players'][player]['clue'] = clue
+        logger.info(f"AI {player} generated clue: {clue}")
+        
+        # Check if all clues are ready
+        all_clues_ready = all(p.get('clue') is not None for p in rooms[room_code]['rounds'][0]['players'].values())
+        logger.info(f"All clues ready: {all_clues_ready}")
+        
+        if all_clues_ready:
+            logger.info("All clues ready, beginning guessing phase!")
             begin_guessing(room_code)
+    except Exception as e:
+        logger.error(f"Error in ai_clue for {player} in room {room_code}: {e}")
+        import traceback
+        logger.error(traceback.format_exc())
 
 def setup_game(room_code):
     n_players = len(rooms[room_code]['players'])
@@ -222,26 +264,43 @@ def update_guess(room_code):
 def check_for_next_round(room_code):
     round_idx, clue_player_idx, clue_player_name = rooms[room_code]['game_idx']
     n_players = len(rooms[room_code]['players'])
-    if rooms[room_code]['guess_count'] >= n_players - 1:
+    current_guesses = rooms[room_code]['guess_count']
+    expected_guesses = n_players - 1
+    
+    logger.info(f"Checking next round for room {room_code}: {current_guesses}/{expected_guesses} guesses")
+    logger.info(f"Current guesses: {rooms[room_code]['guesses']}")
+    
+    if current_guesses >= expected_guesses:
+        logger.info(f"All guesses received! Calculating scores...")
         # Add score
         real_point = rooms[room_code]['rounds'][round_idx]['players'][clue_player_name]['point']
+        logger.info(f"Real point was: {real_point}")
+        
         overall_points = 0
         for player, guess in rooms[room_code]['guesses'].items():
             player_points = 100 * (1 - abs(real_point - float(guess)))
             overall_points += player_points
             rooms[room_code]['players'][player]['score'] += player_points
             rooms[room_code]['players'][player]['last_score'] = player_points
-        rooms[room_code]['score'] += overall_points / (n_players - 1)
-        rooms[room_code]['players'][clue_player_name]['score'] += overall_points / (n_players - 1)
-        rooms[room_code]['players'][clue_player_name]['last_score'] = overall_points / (n_players - 1)
+            logger.info(f"Player {player} scored {player_points} points with guess {guess}")
+        
+        clue_giver_points = overall_points / (n_players - 1)
+        rooms[room_code]['score'] += clue_giver_points
+        rooms[room_code]['players'][clue_player_name]['score'] += clue_giver_points
+        rooms[room_code]['players'][clue_player_name]['last_score'] = clue_giver_points
+        logger.info(f"Clue giver {clue_player_name} scored {clue_giver_points} points")
 
         # Next round
         clue_player_idx += 1
         if clue_player_idx >= n_players:
             clue_player_idx = 0
             round_idx += 1
+            
+        logger.info(f"Moving to round {round_idx}, player {clue_player_idx}")
+        
         if round_idx >= len(rooms[room_code]['rounds']):
             # Game over
+            logger.info(f"Game over for room {room_code}")
             rooms[room_code]['game_state'] = 'Waiting'
             for k in ['guesses', 'game_idx', 'guess_count', 'guess_reason', 'rounds']:
                 rooms[room_code].pop(k)
@@ -255,12 +314,17 @@ def check_for_next_round(room_code):
             }
             rooms[room_code]['guess_count'] = 0
             rooms[room_code]['guess_reason'] = {}
+            logger.info(f"Starting next round - new clue giver: {sorted_players[clue_player_idx]}")
             threading.Thread(target=functools.partial(ai_guess, room_code)).start()
+    else:
+        logger.info(f"Still waiting for more guesses: {current_guesses}/{expected_guesses}")
 
 @app.route('/api/room/<room_code>/submit_guess', methods=['POST'])
 def submit_guess(room_code):
+    logger.info(f"Human submitted guess for room {room_code}")
     round_idx, clue_player_idx, clue_player_name = rooms[room_code]['game_idx']
     rooms[room_code]['guess_count'] += 1
+    logger.info(f"Guess count now: {rooms[room_code]['guess_count']}")
     check_for_next_round(room_code)
     return jsonify(rooms[room_code]), 200
 

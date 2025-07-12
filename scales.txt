@@ -1,30 +1,30 @@
-Easy Rock Climbing Route;Impossible Rock Climbing Route
-Good Israeli Food;Terrible Israeli Food
-Manhattan Living;Brooklyn Living
-Early Seinfeld Episodes;Late Seinfeld Episodes
-Logitech Product That Works;Logitech Product That Breaks
-Construction Finished On Time;Construction Delayed Forever
-Boba Being a Good Dog;Boba Being Naughty
-Uncle Leo Being Sweet;Uncle Leo Being Sassy
-AI Podcast Content;Human Podcast Content
-Israeli Parents Being Supportive;Israeli Parents Being Disappointed
-V0 Climb;V15 Climb
-Fresh Hummus;Week-Old Hummus
-Upper East Side;Lower East Side
-Newman Episodes;Non-Newman Episodes
-Wireless Mouse;Wired Mouse
-Apartment Ready;Apartment Not Ready
-Boba Sleeping;Boba Zooming
-Uncle Leo Purring;Uncle Leo Hissing
-ChatGPT Generated;Human Generated
-Proud Israeli Parents;Concerned Israeli Parents
-Beginner Bouldering;Expert Bouldering
-Shakshuka Quality;Falafel Quality
-Central Park;Prospect Park
-Kramer Episodes;George Episodes
-Gaming Mouse;Office Mouse
-Foundation Poured;Keys Handed Over
-Boba Cuddling;Boba Playing
-Uncle Leo Hiding;Uncle Leo Demanding Food
-Podcast Intro;Podcast Outro
-Israeli Mom Cooking;Israeli Dad Jokes
+Jug Haul;Crimpy Nightmare
+Gym Climbing;Outdoor Trad
+Beginner Route;Elite Problem
+Tourist Trap;Hidden Gem
+Overpriced;Surprisingly Cheap
+Uptown Energy;Downtown Vibe
+Quiet Spot;Chaotic Scene
+Comfort Food;Fancy Cuisine
+Street Food;Fine Dining
+Mild Flavor;Intense Spice
+Quick Bite;Long Meal
+Guilty Pleasure;Critically Acclaimed
+Nostalgic;Cutting Edge
+Mainstream;Niche
+Lighthearted;Heavy Drama
+Just Works;Constant Problems
+Simple Design;Complex Interface
+Affordable Tech;Premium Price
+Useful Innovation;Gimmicky Feature
+Chill Personality;High Energy
+Responsible Choice;Spontaneous Decision
+Introvert Activity;Social Butterfly
+Practical;Idealistic
+Underrated;Overrated
+Timeless;Trendy
+Cozy;Intimidating
+Effortless;High Maintenance
+Easy Win;Impossible Challenge
+Common Knowledge;Obscure Fact
+Casual Vibes;Formal Setting
