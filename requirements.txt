@@ -8,3 +8,4 @@ requests==2.31.0
 retrying==1.3.4
 gunicorn==21.2.0
 eventlet==0.33.3
+httpx==0.27.2
