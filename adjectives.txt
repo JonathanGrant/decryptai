@@ -9,15 +9,12 @@ Intrusive
 Optimistic
 Pessimistic
 Energetic
-Melancholic
 Annoying
-Whimsical
 Mysterious
 Ecstatic
 Nostalgic
 Hilarious
 Playful
-Bittersweet
 Thrilling
 Chaotic
 Inspiring
@@ -35,3 +32,4 @@ Rhyming
 Singing
 Zombie
 Drunk
+Reggae
