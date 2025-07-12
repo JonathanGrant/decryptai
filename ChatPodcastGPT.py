@@ -90,7 +90,7 @@ class GttsTTS:
 
 
 # %%
-DEFAULT_MODEL = 'gpt-4o-mini'
+DEFAULT_MODEL = 'gpt-4.1-mini'
 
 class Chat:
     class Model(enum.Enum):
@@ -107,13 +107,17 @@ class Chat:
     @classmethod
     def num_tokens_from_text(cls, text, model=DEFAULT_MODEL):
         """Returns the number of tokens used by some text."""
-        encoding = tiktoken.encoding_for_model(model)
+        # Use gpt-3.5-turbo tokenizer for gpt-4.1-mini since tiktoken doesn't have a mapping
+        tokenizer_model = "gpt-3.5-turbo" if model == "gpt-4.1-mini" else model
+        encoding = tiktoken.encoding_for_model(tokenizer_model)
         return len(encoding.encode(text))
     
     @classmethod
     def num_tokens_from_messages(cls, messages, model=DEFAULT_MODEL):
         """Returns the number of tokens used by a list of messages."""
-        encoding = tiktoken.encoding_for_model(model)
+        # Use gpt-3.5-turbo tokenizer for gpt-4.1-mini since tiktoken doesn't have a mapping
+        tokenizer_model = "gpt-3.5-turbo" if model == "gpt-4.1-mini" else model
+        encoding = tiktoken.encoding_for_model(tokenizer_model)
         num_tokens = 0
         for message in messages:
             num_tokens += 4  # every message follows <im_start>{role/name}\n{content}<im_end>\n
