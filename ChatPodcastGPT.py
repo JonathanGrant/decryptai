@@ -14,7 +14,7 @@
 # ---
 
 # %%
-import openai
+from openai import OpenAI
 import tiktoken
 import tempfile
 import IPython
@@ -35,7 +35,17 @@ from xml.etree import ElementTree as ET
 import requests
 from bs4 import BeautifulSoup
 logger = structlog.getLogger()
-openai.api_key = os.environ.get("OPENAI_KEY", None) or open('/root/waivelength/.openai_key').read().strip()
+try:
+    api_key = os.environ.get("OPENAI_KEY", None)
+    if not api_key:
+        try:
+            api_key = open('/root/waivelength/.openai_key').read().strip()
+        except:
+            api_key = open('/Users/jong/.openai_key').read().strip()
+    client = OpenAI(api_key=api_key)
+except Exception as e:
+    logger.error(f"Could not initialize OpenAI client: {e}")
+    client = None
 
 
 # %%
@@ -116,8 +126,7 @@ class Chat:
 
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def _msg(self, *args, model=DEFAULT_MODEL, **kwargs):
-        return openai.ChatCompletion.create(
-            *args,
+        return client.chat.completions.create(
             model=model,
             messages=self._history,
             **kwargs
