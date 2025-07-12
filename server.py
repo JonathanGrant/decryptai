@@ -19,6 +19,8 @@ from ChatPodcastGPT import Chat
 prefix = '/root/waivelength/'
 if not os.path.exists(prefix):
     prefix = '/Users/jong/Documents/waivelength/'
+if not os.path.exists(prefix):
+    prefix = '/app/'
 AI_PREFIX = "[AI] "
 
 app = Flask(__name__, static_folder=prefix+'ui/build')
