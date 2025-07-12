@@ -67,11 +67,26 @@ def join_room(room_code, player_name):
             description: Room not found
     """
     if room_code not in rooms:
-        # Create room with 3 AI players
+        # Create room with 3 AI players with unique names
         ai_players = {}
+        used_names = set()
         for i in range(3):
-            ai_name = AI_PREFIX + random.choice(adjectives) + ' ' + random.choice(ais)
-            ai_players[ai_name] = {'score': 0, 'last_score': 0}
+            # Generate unique AI names
+            attempts = 0
+            while attempts < 50:  # Prevent infinite loop
+                ai_name = AI_PREFIX + random.choice(adjectives) + ' ' + random.choice(ais)
+                if ai_name not in used_names:
+                    used_names.add(ai_name)
+                    ai_players[ai_name] = {'score': 0, 'last_score': 0}
+                    break
+                attempts += 1
+            else:
+                # Fallback: add a number suffix to make it unique
+                base_name = AI_PREFIX + random.choice(adjectives) + ' ' + random.choice(ais)
+                ai_name = f"{base_name} #{i+1}"
+                ai_players[ai_name] = {'score': 0, 'last_score': 0}
+        
+        logger.info(f"Created room {room_code} with AI players: {list(ai_players.keys())}")
         rooms[room_code] = {'players': ai_players, 'game_state': 'Waiting', 'score': 0}
     rooms[room_code]['players'][player_name] = {'score': 0, 'last_score': 0}
     return jsonify({'status': 'joined', 'room_code': room_code}), 200
