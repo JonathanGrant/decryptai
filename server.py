@@ -85,7 +85,8 @@ class DecryptoGame:
             'current_code': self.current_code if self.phase in ['clue_giving', 'guessing'] else None,
             'current_clues': self.current_clues,
             'team_guesses': self.team_guesses,
-            'winner': self.winner
+            'winner': self.winner,
+            'round_history': self.round_history
         }
 
     def add_player(self, player_name, team_color):

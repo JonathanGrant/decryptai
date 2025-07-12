@@ -68,13 +68,29 @@ Your team's 4 code words are:
 You need to give clues for the sequence: {code_sequence}
 This means give a clue for word #{code_sequence[0]}, then word #{code_sequence[1]}, then word #{code_sequence[2]}.
 
-RULES:
+CRITICAL RULES:
 - Give exactly 3 clues, one for each position in the sequence
-- Clues should help your teammates guess the correct numbers
-- Clues cannot contain the actual code words
-- Clues should be 1-3 words each
-- Make clues helpful but not too obvious (opposing team is listening!)
-- Be creative but clear
+- Clues MUST help your teammates identify the correct word numbers
+- Clues CANNOT contain any part of the actual code words or sound-alikes
+- Each clue should be 1-2 words maximum
+- Think about synonyms, categories, associations, or descriptions
+- Be specific enough for your team but vague enough that opponents struggle
+
+STRATEGY TIPS:
+- Use categories (e.g., "animal" for TIGER, "metal" for IRON)
+- Use synonyms (e.g., "large" for BIG, "fast" for QUICK) 
+- Use associations (e.g., "fire" for RED, "ocean" for BLUE)
+- Use functions (e.g., "communication" for PHONE, "transportation" for CAR)
+- Avoid obvious rhymes or word parts
+
+Examples of GOOD clues:
+- For ELEPHANT: "Africa", "trunk", "gray"
+- For GUITAR: "strings", "music", "strum"
+- For THUNDER: "storm", "loud", "sky"
+
+Examples of BAD clues:
+- For ELEPHANT: "el-something", "phant", "large mammal with trunk" (too obvious/contains word parts)
+- For GUITAR: "instrument with 6 strings that you play" (too long and obvious)
 
 Respond with a JSON array of exactly 3 clues:
 ["clue1", "clue2", "clue3"]"""

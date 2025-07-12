@@ -47,6 +47,13 @@ interface GameState {
   current_clues: string[];
   team_guesses: Record<string, number[]>;
   winner?: string;
+  round_history?: Array<{
+    round: number;
+    team: string;
+    code: number[];
+    clues: string[];
+    guesses: Record<string, number[]>;
+  }>;
 }
 
 const App: React.FC = () => {
@@ -372,11 +379,20 @@ const App: React.FC = () => {
             <Typography variant="h6">
               Team {gameState.current_team.toUpperCase()} is giving clues...
             </Typography>
-            {gameState.current_code && (
-              <Typography variant="body2">
-                Code: {gameState.current_code.join('-')}
-              </Typography>
-            )}
+            {gameState.current_code && (() => {
+              const myTeam = gameState.teams.red.players.includes(playerName) ? 'red' : 'blue';
+              const isMyTeamGiving = myTeam === gameState.current_team;
+              
+              return isMyTeamGiving ? (
+                <Typography variant="body2">
+                  Your code: {gameState.current_code.join('-')}
+                </Typography>
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  Waiting for clues...
+                </Typography>
+              );
+            })()}
           </CardContent>
         </Card>
       )}
@@ -454,6 +470,42 @@ const App: React.FC = () => {
           🎉 Team {gameState.winner.toUpperCase()} wins!
         </Alert>
       )}
+
+      {/* Game History */}
+      <Card sx={{ mt: 3 }}>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            Game History
+          </Typography>
+          {(() => {
+            const history = gameState.round_history || [];
+            
+            return history.length > 0 ? (
+              <Box>
+                {history.map((round, index) => (
+                  <Box key={index} sx={{ p: 2, bgcolor: 'grey.50', borderRadius: 1, mb: 1 }}>
+                    <Typography variant="body2" fontWeight="bold">
+                      Round {round.round} - Team {round.team.toUpperCase()}
+                    </Typography>
+                    <Typography variant="body2">
+                      Clues: {round.clues.join(' | ')}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Code: {round.code.join('-')} | 
+                      Red guess: {round.guesses.red?.join('-') || 'None'} | 
+                      Blue guess: {round.guesses.blue?.join('-') || 'None'}
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No history yet. Start the game to see round history here.
+              </Typography>
+            );
+          })()}
+        </CardContent>
+      </Card>
     </Container>
   );
 };
