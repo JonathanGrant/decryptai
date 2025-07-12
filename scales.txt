@@ -1,10 +1,7 @@
 Hudson Yards Crowd Density;Dolomites Trail Solitude
 Sleep‑in Saturday;5 a.m. Marathon Training
-Equinox HIIT Burn;Pickleball Chill
 Pixel‑perfect React UI;Nanosecond C++ HFT Kernel
 Jump Trading Alpha;Meta Engagement Metric
-Quick‑and‑Dirty Script;Stress‑Tested Production Code
-Quick Catskills Getaway;Month‑long Faroe Islands Expedition
 Relaxing Lago di Braies Rowboat;Seceda Ridge Via Ferrata
 City Bike Lane Hazard;Irvington Backyard Stroll
 Decaf Latte;Weber‑Ground Triple‑Espresso
@@ -13,68 +10,23 @@ Beyond Burger;Fresh‑caught Faroe Salmon
 Studio‑Apartment Minimalism;4‑Bed Irvington Chaos
 One Bark‑per‑Day Boba;Goat Serenade at Dawn
 No‑kids‑yet Flexibility;2026 Two‑Toddlers Time‑Boxing
-Seinfeld “Nothing” Episode;Game‑Theory Lecture Marathon
 Listening at 1×;Podcast at 3×
-Underrated Indie Board Game;Overhyped AAA Release
-1× Day Apple Watch “Stand” Ping;VO₂‑Max‑Chasing Ultra‑Runner
 Skincare Sample Sachet;Full Retinoid‑Niacinamide Routine
-Battery‑Free EV Trip;30‑Minute Supercharge Stop
-5‑GHz Wi‑Fi Ping;Dolomites Mountain Latency
-Zero‑Tax Florida Fantasy;NYC Property‑Tax Reality
 Single‑Origin Yuzu Cocktail;Plain Seltzer Hydration
 Hudson Yards High‑Rise View;Goat‑Proof Irvington Fence Line
 Crate‑Silent Boba Night;3 a.m. Puppy Howl
-Booming Spin‑Class Beats;Noise‑Canceling Code Sprint
-3× Podcast Absorption;Re‑replay at 0.5× for Becca’s Joke
-Simpsons‑Style Portrait Win;AI Art “Uncanny Valley” Fail
-Instant Health‑Panel Bloodwork;Six‑Week Insurance Approval
-One‑Hour Marathon PR Pace;Recovery Run Stroll
-No‑SQL ClickHouse Query;Nested‑Loop Spreadsheet Hack
-Jump‑Trading Nanosecond;Meta Quarterly OKR
 Pickleball Dink Rally;Full‑Tilt Smash Winner
 Seceda “Instagram Only” Hike;Tre Cime 10‑Hour Trek
-Single‑Day Faroe Stopover;Month‑Long Remote Work Visa
-Coffee Grinder 6‑Micron Burrs;Pre‑Ground Grocery Tin
 Glowing Retinoid Complex;Forgot Sunscreen at Noon
 Strict Pescatarian Menu;“Just One Chicken Nugget” Exception
-Code Review Nit‑Pick;YOLO‑Merge to Main
-Deep‑Stack Poker Solver;Friendly UNO Night
-Baby‑Proofing Every Corner;Minimalist Open‑Shelf Décor
-Equinox Sauna Zen;Midtown Subway Rush‑Hour
-8 TB Back‑Test Dataset;Whiteboard‑Math Prototype
-Four‑Bedroom Irvington Calm;Midtown Micro‑Apartment Flashback
-Goat Yoga Serenity;Goat Eats Wiring Panic
-Seinfeld Trivia Perfect Score;Totally Blank on Newman’s Job
-Two‑Kid 2026 Reality;Sleep‑When‑You‑Want Present
 Over‑Engineered Smart Home;Flip‑Switch Light Bulbs
-Quarterly Asset Re‑balance;“Diamond Hands” HODL
 Crate‑Quiet Boba;2 a.m. Door‑Scratching Boba
-Golden‑Retriever Cuddly;Dachshund Stubborn
 Perfect “Leave It”;Street‑Trash Munch
 30‑Second Zoomies;Hour‑Long Goat‑Herding Fantasy
 Vet‑Approved Kibble;“Stole Mom’s Avocado Toast”
-Dry‑Coat Day;Post‑Rain Mud‑Monster
-Uncle Leo’s Laser‑Pointer Agility;Uncle Leo “Too Regal to Chase”
-Cat‑Dog Peace Treaty;Paw‑Swipe Standoff
-Boba Beach Swim;Boba Bath‑Time Meltdown
-Uncle Leo Window‑Sunbath;Midnight Zoom‑Across Keyboard
-Firmware Push in One Try;“It Worked on My Machine”
-Wireless‑Mouse Battery Life;“Forgot to Charge Again”
-Dad’s Mechanical‑Keyboard Clack;Mom’s Hammer Drill Rumble
-Logitech Product Launch Hype;“Next Sprint Slip”
-Blueprint Revision #1;Blueprint Revision #87
-Tel‑Aviv Startup Optimism;NYC Permit‑Office Reality
-5‑Minute Hebrew Tech Demo;Hour‑Long English Explanation
-Dad’s RGB Lighting Everywhere;Mom’s “Just Give Me Daylight”
 “Move Fast, Break Nothing”;“Measure Twice, Pour Concrete Once”
-Nano‑Receiver Convenience;“Where Did I Put the Dongle?”
 Site‑Safety Green Tag;Project‑Delay Red Tape
-Sunday Shakshuka Brunch;Monday Grab‑and‑Code
-Zoom Family Call Audio Sync;Echo‑Filled Worksite Chaos
-Iterative Agile Sprints;Endless Waterfall Gantt
-Dad’s Hack‑Day Prototype;Mom’s Decade‑Long Punch‑List
-“Planned‑Obsolescence” Skeptic;“Future‑Proof” Steel Beams
+Sunday Shakshuka Brunch;Monday Grab‑and‑Go
 Logi Options+ Macro Bliss;Manual Toolbox Scramble
-Cloud‑Based CAD;Coffee‑Stained Paper Plans
 Kyiv‑to‑Haifa Supply Chain;Local Quarry Out‑of‑Stone
-Hot‑Swap Keycap Fun;Jackhammer Bit Change
+Uncle Leo Silent Presence;Uncle Leo Tiny Chirp Attempt
