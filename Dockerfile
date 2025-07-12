@@ -26,7 +26,7 @@ RUN npm install && npm run build
 WORKDIR /app
 
 # Expose port
-EXPOSE $PORT
+EXPOSE 8000
 
 # Start the Flask server with gunicorn
-CMD ["sh", "-c", "gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT server:app"]
+CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:8000", "server:app"]
