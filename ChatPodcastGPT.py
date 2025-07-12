@@ -90,7 +90,7 @@ class GttsTTS:
 
 
 # %%
-DEFAULT_MODEL = 'gpt-4.1-mini'
+DEFAULT_MODEL = 'gpt-4o-mini'
 
 class Chat:
     class Model(enum.Enum):
