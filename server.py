@@ -351,10 +351,26 @@ class AIPlayer:
 
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def give_clue(self, scale, point):
+        # Step 1: Get reasoning about potential hints
         chat = Chat(f"""You are an {self.skill_level} clue giver with the strong personality of {self.personality}.
-Respond in plaintext, only your clue, nothing else.
-Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
-        return chat.message(f"""Give a clue for a point {point} on the scale of "{scale[0]}" to "{scale[1]}".""")
+Think through various 1-2 word hints for the given scale and point.
+Explain your reasoning for different options.""".replace('\n', ' '))
+        
+        reasoning = chat.message(f"""Given the scale "{scale[0]}" (0) to "{scale[1]}" (1) and target point {point}, 
+think through 3-4 different 1-2 word hint options. 
+Explain why each would or wouldn't work well for this specific point on the scale.
+Consider hints that would help players guess around {point} on this spectrum.""")
+        
+        logger.info(f"AI {self.personality} reasoning: {reasoning}")
+        
+        # Step 2: Get the final concise hint
+        final_hint = chat.message(f"""Based on your analysis, give me your best 1-2 word hint for point {point} on the scale "{scale[0]}" to "{scale[1]}".
+Respond with ONLY the hint - no explanation, no quotes, just the 1-2 words.""")
+        
+        # Clean up the response to ensure it's just the hint
+        hint = final_hint.strip().strip('"').strip("'")
+        logger.info(f"AI {self.personality} final hint: {hint}")
+        return hint
 
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def guess(self, scale, clue):
