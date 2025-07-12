@@ -11,3 +11,5 @@ requests
 PyGithub
 retrying
 beautifulsoup4
+gunicorn
+eventlet

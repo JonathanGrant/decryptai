@@ -28,5 +28,5 @@ WORKDIR /app
 # Expose port
 EXPOSE 5000
 
-# Start the Flask server
-CMD ["python", "server.py"]
+# Start the Flask server with gunicorn
+CMD ["gunicorn", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0:5000", "server:app"]
