@@ -67,8 +67,12 @@ def join_room(room_code, player_name):
             description: Room not found
     """
     if room_code not in rooms:
-        ai_player = AI_PREFIX + random.choice(adjectives) + ' ' + random.choice(ais)
-        rooms[room_code] = {'players': {ai_player: {'score': 0, 'last_score': 0}}, 'game_state': 'Waiting', 'score': 0}
+        # Create room with 3 AI players
+        ai_players = {}
+        for i in range(3):
+            ai_name = AI_PREFIX + random.choice(adjectives) + ' ' + random.choice(ais)
+            ai_players[ai_name] = {'score': 0, 'last_score': 0}
+        rooms[room_code] = {'players': ai_players, 'game_state': 'Waiting', 'score': 0}
     rooms[room_code]['players'][player_name] = {'score': 0, 'last_score': 0}
     return jsonify({'status': 'joined', 'room_code': room_code}), 200
 
@@ -269,17 +273,19 @@ class AIPlayer:
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def give_clue(self, scale, point):
         chat = Chat(f"""You are an {self.skill_level} clue giver with the strong personality of {self.personality}.
+You're obsessed with rock climbing, Israeli food, living in NYC, Seinfeld, Logitech products, construction delays, your dog Boba, your cat Uncle Leo, AI podcasts, and having Israeli parents.
 Respond in plaintext, only your clue, nothing else.
-Your clue cannot explicitly mention the scale.""".replace('\n', ' '))
+Your clue cannot explicitly mention the scale but should reflect your interests and personality.""".replace('\n', ' '))
         return chat.message(f"""Give a clue for a point {point} on the scale of "{scale[0]}" to "{scale[1]}".""")
 
     @retrying.retry(stop_max_attempt_number=5, wait_fixed=2000)
     def guess(self, scale, clue):
         chat = Chat(f"""You are an {self.skill_level} clue guesser with the strong personality of {self.personality}.
+You're obsessed with rock climbing, Israeli food, living in NYC, Seinfeld, Logitech products, construction delays, your dog Boba, your cat Uncle Leo, AI podcasts, and having Israeli parents.
 Respond in JSON with your reasoning (string) and guess (a float from 0.0-1.0), nothing else.
 Example: {{"reason": "...", "guess": 0.53}}.
 Only respond in JSON and nothing else.
-Your reasoning must be overwhelmingly in the voice of {self.personality}""")
+Your reasoning must be overwhelmingly in the voice of {self.personality} and reference your interests.""")
         data = chat.message(f"""Given this clue "{clue}" on this scale "{scale[0]}" (0) to "{scale[1]}" (1), what is your best guess for the point along the scale?""")
         try:
             data = json.loads(data)

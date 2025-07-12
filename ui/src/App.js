@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import './App.css';
 
 import GameAppBar from './AppBar';
 import GameSetup from './GameSetup';
@@ -106,51 +107,106 @@ const App = () => {
   }, [roomCode]);
 
   return (
-    <div>
+    <div className="App">
       <GameAppBar playerName={playerName} />
-    <Container>
-      <Typography variant="h4">wAIvelength Game</Typography>
+      <Container>
+        <div className="game-container">
+          <Typography variant="h3" className="game-title">🎯 wAIvelength Game</Typography>
 
-      {!playerNameHasSet ? (<><TextField
-        label="Player Name"
-        value={playerName}
-        onChange={(e) => {setPlayerName(e.target.value);}}
-      />
-      <Button variant="contained" color="primary" onClick={setPlayer}>
-        Set Player Name
-      </Button></>) : null}
+          {!playerNameHasSet ? (
+            <div style={{ marginBottom: '20px' }}>
+              <TextField
+                label="Player Name"
+                value={playerName}
+                onChange={(e) => {setPlayerName(e.target.value);}}
+                className="input-field"
+                variant="outlined"
+              />
+              <br />
+              <Button className="game-button" onClick={setPlayer}>
+                Set Player Name
+              </Button>
+            </div>
+          ) : null}
 
-      <TextField
-        label="Room Code"
-        value={roomCode}
-        onChange={(e) => setRoomCode(e.target.value)}
-      />
-      <Button variant="contained" color="primary" onClick={joinRoom}>
-        Join Room
-      </Button>
+          <div style={{ marginBottom: '20px' }}>
+            <TextField
+              label="Room Code"
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value)}
+              className="input-field"
+              variant="outlined"
+            />
+            <br />
+            <Button className="game-button" onClick={joinRoom}>
+              Join Room
+            </Button>
+          </div>
 
-      {roomData && roomData.game_state === 'Waiting' ? (<Button variant="contained" color="secondary" onClick={startGame}>
-        Start Game
-      </Button>) : null}
+          {roomData && roomData.game_state === 'Waiting' ? (
+            <div className="status-waiting">
+              <Typography variant="h6">🎮 Ready to Play!</Typography>
+              <Button className="game-button" onClick={startGame}>
+                Start Game
+              </Button>
+            </div>
+          ) : null}
 
-      {roomData && (
-        <div>
-          <Typography variant="h6">Room Data:</Typography>
-          <Typography variant="body1">Game State: {roomData.game_state}</Typography>
-          <Typography variant="body1">Score: {roomData.score.toFixed(2)}</Typography>
-          <Typography variant="body1">Players:</Typography>
-          {Object.keys(roomData.players).map((player) => (
-            <Typography key={player} variant="body2">
-              {player}: {roomData.players[player].score.toFixed(2)} (+{roomData.players[player].last_score.toFixed(2)})
-            </Typography>
-          ))}
+          {roomData && roomData.game_state === 'Setup' && (
+            <div className="status-setup">
+              <Typography variant="h6">📝 Setting Up Game</Typography>
+            </div>
+          )}
+
+          {roomData && roomData.game_state === 'Guessing' && (
+            <div className="status-guessing">
+              <Typography variant="h6">🤔 Guessing Phase</Typography>
+            </div>
+          )}
+
+          {roomData && (
+            <div className="score-display">
+              <Typography variant="h6">🏆 Game Status</Typography>
+              <Typography variant="h4" style={{ color: '#667eea', fontWeight: 'bold' }}>
+                Total Score: {roomData.score.toFixed(2)}
+              </Typography>
+              <Typography variant="h6" style={{ marginTop: '20px' }}>👥 Players:</Typography>
+              {Object.keys(roomData.players).map((player) => (
+                <div 
+                  key={player} 
+                  className={player.startsWith('[AI]') ? 'ai-player-card' : 'player-card'}
+                >
+                  <Typography variant="h6">
+                    {player.startsWith('[AI]') ? '🤖 ' : '👤 '}{player}
+                  </Typography>
+                  <Typography variant="body1">
+                    Score: {roomData.players[player].score.toFixed(2)} 
+                    <span style={{ color: '#ffeb3b' }}>
+                      (+{roomData.players[player].last_score.toFixed(2)})
+                    </span>
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {roomData && roomData.game_state === 'Setup' && !setupGame ? (
+            <GameSetup playerName={playerName} rounds={roomData.rounds} submit={submitClues}/>
+          ) : null}
+
+          {roomData && roomData.game_state === 'Guessing' ? (
+            <GameGuess 
+              myName={playerName} 
+              game_idx={roomData.game_idx} 
+              guesses={roomData.guesses} 
+              guessReasons={roomData.guess_reason} 
+              rounds={roomData.rounds} 
+              updateGuess={updateGuess} 
+              submitGuess={submitGuess} 
+            />
+          ) : null}
         </div>
-      )}
-
-      {roomData && roomData.game_state === 'Setup' && !setupGame ? (<GameSetup playerName={playerName} rounds={roomData.rounds} submit={submitClues}/>) : null}
-
-      {roomData && roomData.game_state === 'Guessing' ? (<GameGuess myName={playerName} game_idx={roomData.game_idx} guesses={roomData.guesses} guessReasons={roomData.guess_reason} rounds={roomData.rounds} updateGuess={updateGuess} submitGuess={submitGuess} />) : null}
-    </Container>
+      </Container>
     </div>
   );
 };
