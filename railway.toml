@@ -1,5 +1,5 @@
 [build]
-builder = "nixpacks"
+buildCommand = "cd ui && npm install && npm run build && cd .."
 
 [deploy]
 startCommand = "python server.py"
