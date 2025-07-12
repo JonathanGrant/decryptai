@@ -1,5 +1,5 @@
 [deploy]
-startCommand = "python server.py"
+startCommand = "gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT server:app"
 healthcheckPath = "/"
 healthcheckTimeout = 300
 restartPolicyType = "always"
